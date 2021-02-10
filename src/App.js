@@ -1,6 +1,11 @@
 import React from 'react'
 import Search from './components/Search'
 import CharacterCard from './components/CharacterCard/CharacterCard'
+import {BrowserRouter , Router, Route} from "react-router-dom";
+
+import {Link} from 'react-router-dom'
+
+
 
 function App() {
   const apiurl ="http://www.omdbapi.com/?i=tt3896198&apikey=873b707";
