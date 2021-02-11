@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,83 +7,49 @@ import {
   useParams,
   useRouteMatch
 } from "react-router-dom";
+import CharacterList from './components/CharacterList/CharacterList';
+import CharacterDetail from './components/CharacterDetails/CharacterDetail';
+
+
+const App = () => {
+
+  const [hasError, setErrors] = useState(false);
+  const [characters, setCharacters] = useState({});
+
+ 
+  useEffect(() => {
+    async function fetchData() {
+      const res = await fetch("https://rickandmortyapi.com/api");
+      res
+        .json()
+        .then(res => setCharacters(res))
+        .catch(err => setErrors(err));
+    }
+
+    fetchData();
+  });
 
 
 
-export default function App() {
+
   return (
+    
+    
     <Router>
       <div>
-        <ul>
-          <li>
-            <Link to="/">Character Details</Link>
-          </li>
-           <li>
-            <Link to="/characterlist">Character List</Link>
-          </li>
-        </ul>
-
         <hr />
 
         <Switch>
-          <Route exact path="/">
-            <CharacterDetail />
-          </Route>
-          <Route path="/characterlist">
-            <CharacterList />
-          </Route>
+        <Route path="/characters/:id" component={CharacterDetail} />
+        <Route path="/characters" component={CharacterList} />
         </Switch>
+        <CharacterList/>
       </div>
     </Router>
+    
   );
 }
 
-function CharacterDetail() {
-  return (
-    <div>
-      <h2>Characters Detail</h2>
-    </div>
-  );
-}
+export default App;
 
-function CharacterList() {
-  
-  let { path, url } = useRouteMatch();
 
-  return (
-    <div>
-      <h2>List of characters</h2>
-      <ul>
-        <li>
-          <Link to={`${url}/Rick`}>Rick</Link>
-        </li>
-        <li>
-          <Link to={`${url}/Morty`}>Morty</Link>
-        </li>
-        <li>
-          <Link to={`${url}/Rick and Morty`}>Rick and Morty</Link>
-        </li>
-      </ul>
-
-      <Switch>
-        <Route exact path={path}>
-          <h3>Please select a topic.</h3>
-        </Route>
-        <Route path={`${path}/:topicId`}>
-          <Topic />
-        </Route>
-      </Switch>
-    </div>
-  );
-}
-
-function Topic() {
- 
-  let { topicId } = useParams();
-
-  return (
-    <div>
-      <h3>{topicId}</h3>
-    </div>
-  );
-}
